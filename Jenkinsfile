@@ -19,10 +19,9 @@ pipeline {
         }
         stage('Push Image') {
             steps {
-                    //sh
-			        bat "docker login --username=$DOCKER_CREDS_USR --password-stdin=$DOCKER_CREDS_PWD"
-			        bat "docker push madcard31/selenium-docker:latest"
-			    }
+                //sh
+                bat "docker login --username=$DOCKER_CREDS_USR --password-stdin=$DOCKER_CREDS_PWD"
+                bat "docker push madcard31/selenium-docker:latest"
             }
         }
     }
