@@ -1,6 +1,9 @@
 pipeline {
     // master executor should be set to 0
     agent any
+    environment {
+        DOCKER_CREDS = credentials('dockerhub')
+    }
     stages {
         stage('Build Jar') {
             steps {
@@ -13,9 +16,6 @@ pipeline {
             }
         }
         stage('Push Image') {
-            environment {
-                DOCKER_CREDS = credentials('dockerhub')
-            }
             steps {
                 bat 'docker login --username $DOCKER_CREDS_USR --password $DOCKER_CREDS_PSW https://registry.hub.docker.com'
                 bat 'docker push madcard31/selenium-docker:latest'
