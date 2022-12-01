@@ -20,8 +20,11 @@ pipeline {
             }
             steps {
                 //sh
-                bat 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin'
-                bat 'docker push madcard31/selenium-docker:latest'
+                withCredentials([sshUserPrivateKey(credentialsId: 'dockerhub', keyFileVariable: 'DOCKER_CREDS_KEY', usernameVariable: 'DOCKER_CREDS_USR')]) {
+                    bat 'docker login --username $DOCKER_CREDS_USR'
+                    bat '$DOCKER_CREDS_KEY'
+                    bat 'docker push madcard31/selenium-docker:latest'
+                }
             }
         }
     } // stages
