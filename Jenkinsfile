@@ -1,5 +1,9 @@
 pipeline {
+    // master executor should be set to 0
     agent any
+    environment {
+        DOCKER_CREDS = credentials('dockerhub')
+    }
     stages {
         stage('Build Jar') {
             steps {
@@ -8,53 +12,19 @@ pipeline {
         }
         stage('Build Image') {
             steps {
-                script {
-                	app = docker.build("madcard31/selenium-docker")
-                }
+                bat 'docker build -t=madcard31/selenium-docker .'
             }
         }
         stage('Push Image') {
             steps {
-                script {
-			        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-			        	app.push("${BUILD_NUMBER}")
-			            app.push("latest")
-			        }
-                }
+                bat 'docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW'
+                bat 'docker push madcard31/selenium-docker:latest'
             }
         }
+    } // stages
+    post{
+        always {
+            bat 'docker logout'
+        }
     }
-}
-
-
-
-// pipeline {
-//     // master executor should be set to 0
-//     agent any
-//     environment {
-//         DOCKER_CREDS = credentials('dockerhub')
-//     }
-//     stages {
-//         stage('Build Jar') {
-//             steps {
-//                 bat 'mvn clean package -DskipTests'
-//             }
-//         }
-//         stage('Build Image') {
-//             steps {
-//                 bat 'docker build -t=madcard31/selenium-docker .'
-//             }
-//         }
-//         stage('Push Image') {
-//             steps {
-//                 bat 'docker login --username $DOCKER_CREDS_USR --password $DOCKER_CREDS_PSW https://registry.hub.docker.com'
-//                 bat 'docker push madcard31/selenium-docker:latest'
-//             }
-//         }
-//     } // stages
-//     post{
-//         always {
-//             bat 'docker logout'
-//         }
-//     }
-// } // pipeline
+} // pipeline
