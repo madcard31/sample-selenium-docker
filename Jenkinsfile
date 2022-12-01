@@ -20,7 +20,7 @@ pipeline {
             }
             steps {
                 //sh
-                bat 'docker login --username=$DOCKER_CREDS_USR --password=$DOCKER_CREDS_PSW'
+                bat 'docker login --username=%DOCKER_CREDS_USR% --password-stdin=%DOCKER_CREDS_PSW%'
                 bat 'docker push madcard31/selenium-docker:latest'
             }
         }
