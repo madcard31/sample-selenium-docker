@@ -24,5 +24,10 @@ pipeline {
                 bat 'docker push madcard31/selenium-docker:latest'
             }
         }
+    } // stages
+    post{
+        always {
+            bat 'docker logout'
+        }
     }
-}
+} // pipeline
