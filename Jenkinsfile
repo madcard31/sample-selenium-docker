@@ -1,5 +1,5 @@
 pipeline {
-    // master executor should be set to 0
+    // master executor should be 0
     agent any
     environment {
             DOCKER_CREDS = credentials('dockerhub')
