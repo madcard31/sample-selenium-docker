@@ -18,12 +18,10 @@ pipeline {
         }
         stage('Push Docker Image to Docker Hub') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'DOCKER_PWD')]) {
-                        bat 'docker login -u madcard31 -p $DOCKER_PWD'
-                    }
-                    bat 'docker push madcard31/selenium-docker:latest'
-			    }
+                withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'DOCKER_PWD')]) {
+                    bat('docker login -u madcard31 -p $DOCKER_PWD')
+                }
+                bat 'docker push madcard31/selenium-docker:latest'
             }
         }
     } // stages
