@@ -2,22 +2,22 @@ pipeline {
     // master executor should be set to 0
     agent any
     stages {
-        stage('Build Jar') {
+        stage('Build Maven Jar') {
             steps {
-                bat "mvn clean package -DskipTests"
+                bat 'mvn clean install -DskipTests'
             }
         }
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps {
-                bat "docker build -t=madcard31/selenium-docker ."
+                bat 'docker build -t=madcard31/selenium-docker .'
             }
         }
-        stage('Push Image') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
-			    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'pass', usernameVariable: 'user')]) {
-			        bat "docker login --username=${user} --password=${pass}"
-			        bat "docker push madcard31/selenium-docker:latest"
-			    }
+			    withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'dockerhub_pwd')]) {
+                    bat 'docker login -u madcard31 -p ${dockerhub_pwd}'
+                }
+			    bat 'docker push madcard31/selenium-docker:latest'
             }
         }
     }
