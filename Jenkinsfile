@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 pipeline {
-    // master executor should be set to 0
     agent any
     options {
         skipStagesAfterUnstable()
@@ -13,15 +12,15 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t=madcard31/selenium-docker .'
+                bat 'docker build -t=docker-image-name .'
             }
         }
         stage('Push Docker Image to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub_pwd', variable: 'DOCKER_PWD')]) {
-                    bat 'docker login -u madcard31 -p %DOCKER_PWD%'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PWD', usernameVariable: 'DOCKER_USR')]) {
+                    bat 'docker login -u %DOCKER_USR% -p %DOCKER_PWD%'
                 }
-                bat 'docker push madcard31/selenium-docker:latest'
+                bat 'docker push docker-image-name:latest'
             }
         }
     } // stages
@@ -31,3 +30,6 @@ pipeline {
         }
     }
 } // pipeline
+
+
+

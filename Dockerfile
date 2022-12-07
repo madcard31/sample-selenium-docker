@@ -3,7 +3,7 @@ FROM openjdk:19-jdk-alpine3.16
 RUN apk add curl jq
 
 # Workspace
-WORKDIR /usr/share/udemy
+WORKDIR /usr/share/sample
 
 # ADD .jars under target from host
 # into this image
@@ -14,16 +14,11 @@ ADD target/libs                         libs
 # in case of any other dependency like .csv / .json / .xls
 # please ADD that as well
 
-# ADD suite files
-ADD book-flight-module.xml              book-flight-module.xml
-ADD search-module.xml                   search-module.xml
+# ADD TestNG suite files
+ADD sample-module.xml              sample-module.xml
 
 # ADD health check script
 ADD healthcheck.sh                      healthcheck.sh
 RUN dos2unix healthcheck.sh
-
-# BROWSER
-# HUB_HOST
-# MODULE
 
 ENTRYPOINT sh healthcheck.sh
